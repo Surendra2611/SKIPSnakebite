@@ -22,7 +22,7 @@ public class SnakeLadder extends Application {
        int  yLine=430;
        int diceValue;
        Label randResult;
-       boolean gameStart=true,turnOnePlayer=true,turnTwoPlayer=false;
+    boolean gameStart=false,turnOnePlayer=true,turnTwoPlayer=true;
        Group tileGroup = new Group();
 
        Player playerOne,playerTwo;
@@ -53,13 +53,28 @@ public class SnakeLadder extends Application {
             public void handle(ActionEvent actionEvent) {
                 if (gameStart == true) {
                     if(turnOnePlayer==true){
-                        getDiceValue();
+                        int positionTwo= playerTwo.currentPiecePosition;
+                        int positionOne=playerOne.currentPiecePosition;
+                        String ans=  playerOne.checkWinning( positionOne);
+                        if (ans=="WON"){
+                            randResult.setText("Player First Won! Restart the Game");
+                            turnOnePlayer=true;
+                            turnTwoPlayer=true;
+                            gameStart=false;
+                            playerOne.movePlayer(0);
+                            playerTwo.movePlayer(-positionTwo+1);
+
+                            return;
+                        }
+                        int diceValue=  getDiceValue();
+                        randResult.setText("Player First moved : "+diceValue);
                         playerOne.movePlayer(diceValue);
                         playerOne.playerAtSnakeOrLadder();
                         turnOnePlayer=false;
                         turnTwoPlayer=true;
                     }
                 }
+
 
             }
         });
@@ -72,7 +87,21 @@ public class SnakeLadder extends Application {
             public void handle(ActionEvent actionEvent) {
                 if (gameStart == true) {
                     if(turnTwoPlayer==true){
-                        getDiceValue();
+                        int positionTwo= playerTwo.currentPiecePosition;
+                        int positionOne=playerOne.currentPiecePosition;
+                        String ans= playerTwo.checkWinning(positionTwo);
+                        if (ans=="WON"){
+                            randResult.setText("Player Second Won! Restart the Game");
+                            turnOnePlayer=true;
+                            turnTwoPlayer=true;
+                            gameStart=false;
+                            playerTwo.movePlayer(0);
+                            playerOne.movePlayer(-positionOne+1);
+
+                            return;
+                        }
+                        int diceValue=  getDiceValue();
+                        randResult.setText("Player Second moved : "+diceValue);
                         playerTwo.movePlayer(diceValue);
                         playerTwo.playerAtSnakeOrLadder();
                         turnTwoPlayer=false;
@@ -84,9 +113,24 @@ public class SnakeLadder extends Application {
         });
 
 
-         Button startGame=new Button("Start Game");
-         startGame.setTranslateX(150);
-         startGame.setTranslateY(yLine);
+        Button startGame=new Button("Game Button");
+        startGame.setTranslateX(150);
+        startGame.setTranslateY(yLine);
+        startGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if(gameStart==false){
+                    randResult.setText("Game starting");
+                    gameStart =true;
+
+                }
+                else {
+                    randResult.setText("Game Paused");
+                    gameStart=false;
+
+                }
+            }
+        });
 
         playerOne=new Player(tileSize, Color.BLACK);
         playerTwo=new Player(tileSize-10,Color.WHITE);
@@ -107,9 +151,10 @@ public class SnakeLadder extends Application {
     }
 
     //method for random dicevalue
-    private void getDiceValue(){
+    private int getDiceValue(){
         diceValue=(int)(Math.random()*6+1);
-        randResult.setText(Integer.toString(diceValue));
+        // randResult.setText(Integer.toString(diceValue));
+        return diceValue;
     }
     @Override
     public void start(Stage stage) throws IOException {

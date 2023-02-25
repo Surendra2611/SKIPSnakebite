@@ -22,6 +22,29 @@ public class Player {
         gamePiece.setTranslateY(this.yPosition);
     }
 
+    //    public void reStarting(Player player,int currentPiecePosition){
+//        if(currentPiecePosition==1){
+//            player.xPosition=gameBoard.getXValue(1);
+//            player.yPosition=gameBoard.getYValue(1);
+//
+//            gamePiece.setTranslateX(player.xPosition);
+//            gamePiece.setTranslateY(player.yPosition);
+//        }
+//    }
+    public String checkWinning(int Position){
+        String check = "";
+        if(Position==100){
+//            snakeLadder.gameStart=false;
+//            snakeLadder.turnOnePlayer=false;
+//            snakeLadder.turnTwoPlayer=false;
+            check="WON";
+            currentPiecePosition=1;
+            //  gamePiece.setTranslateX();
+        }
+        return check;
+    }
+
+
     public void movePlayer(int diceValue){
         if(currentPiecePosition+diceValue<=100){
             currentPiecePosition+=diceValue;
